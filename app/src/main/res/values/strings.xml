@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SungWooEbook</string>
+    <string name="txt_login">로그인</string>
+    <string name="txt_id">아이디</string>
+    <string name="txt_pw">비밀번호</string>
+    <string name="auto_login">자동로그인</string>
+    <string name="find_id">아이디찾기</string>
+    <string name="find_pw">비밀번호찾기</string>
+    <string name="find_id_pw">아이디찾기 · 비밀번호찾기</string>
+    <string name="assin">회원가입</string>
+</resources>
