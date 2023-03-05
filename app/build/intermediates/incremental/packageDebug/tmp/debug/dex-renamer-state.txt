@@ -1,0 +1,4 @@
+#Sun Mar 05 10:04:33 KST 2023
+base.0=C\:\\Users\\Hwang\\AndroidStudioProjects\\SungWooEbook_git\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
+renamed.0=classes.dex
+path.0=classes.dex

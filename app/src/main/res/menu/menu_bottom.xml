@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/tab1"
+        android:enabled="true"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="홈"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/tab2"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="검색"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/tab3"
+        android:icon="@android:drawable/btn_star_big_on"
+        android:title="즐겨찾기"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/tab4"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="마이페이지"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/tab5"
+        android:icon="@android:drawable/ic_notification_overlay"
+        android:title="이벤트"
+        app:showAsAction="always"/>
+</menu>
