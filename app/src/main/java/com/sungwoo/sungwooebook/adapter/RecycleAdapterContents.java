@@ -1,5 +1,6 @@
 package com.sungwoo.sungwooebook.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sungwoo.sungwooebook.Fragment.ViewHolderContents;
+import com.sungwoo.sungwooebook.Model.ContentData;
 import com.sungwoo.sungwooebook.Model.DataModel;
 import com.sungwoo.sungwooebook.R;
 
@@ -17,6 +19,11 @@ public class RecycleAdapterContents extends RecyclerView.Adapter<RecyclerView.Vi
 
     // adapter에 들어갈 list 입니다.
     private ArrayList<DataModel> listData = new ArrayList<>();
+    private Context mContext = null;
+
+    public RecycleAdapterContents(Context context) {
+        mContext = context;
+    }
 
     @NonNull
     @Override
@@ -27,7 +34,7 @@ public class RecycleAdapterContents extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        ((ViewHolderContents)holder).onBind(listData.get(position));
+        ((ViewHolderContents)holder).onBind(listData.get(position), mContext);
     }
 
     @Override
