@@ -15,15 +15,20 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.util.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
-import com.sungwoo.sungwooebook.Model.ContentData;
+import com.sungwoo.sungwooebook.Model.ContentModel;
 import com.sungwoo.sungwooebook.Model.DataModel;
 import com.sungwoo.sungwooebook.R;
+import com.sungwoo.sungwooebook.Utils.DBKey;
 import com.sungwoo.sungwooebook.Utils.UtilsLog;
 import com.sungwoo.sungwooebook.adapter.RecycleAdapterContents;
 import com.sungwoo.sungwooebook.adapter.RecycleAdapterSeries;
@@ -37,6 +42,9 @@ public class HomeFragment extends Fragment {
     RecycleAdapterSeries adapterSeries;
     RecycleAdapterContents adapterContents;
 
+    private int index = 0;
+    private ArrayList<DataModel> dataModels = new ArrayList<DataModel>();
+    private DatabaseReference contentDB;
     private FirebaseStorage storage;
 
     public HomeFragment(Context context){
@@ -46,7 +54,7 @@ public class HomeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mMyView = inflater.inflate(R.layout.activity_bottom, container, false);
+        mMyView = inflater.inflate(R.layout.activity_home_content, container, false);
         return mMyView;
     }
 
@@ -54,9 +62,20 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
+
+        /*
+        23.03.25 smg :: 기존 Data불러오는 메소드에 대한 미사용처리
         getData();
-        //getStoragePhotoData();
+        getStoragePhotoData();
         getStoragePdfData();
+        */
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        contentDB.removeEventListener(childEventListener);
     }
 
     private void init(){
@@ -76,13 +95,16 @@ public class HomeFragment extends Fragment {
         adapterContents = new RecycleAdapterContents(getContext());
         recyclerViewContents.setAdapter(adapterContents);
 
+        contentDB = FirebaseDatabase.getInstance().getReference(DBKey.DB_CONTENTS);
+        contentDB.addChildEventListener(childEventListener);
         storage = FirebaseStorage.getInstance();
 
+        //uploadContent("", "", "");
     }
 
     private void getData(){
         //23-03-22 테스트용으로 adapterContents는 임시 주석
-
+        /*
         DataModel data = new DataModel(R.drawable.iron_man, "아이언맨");
         adapterSeries.addItem(data);
         //adapterContents.addItem(data);
@@ -120,7 +142,45 @@ public class HomeFragment extends Fragment {
         data2 = new DataModel(R.drawable.thor, "토르");
         adapterSeries.addItem(data2);
         //adapterContents.addItem(data2);
+
+        */
     }
+
+    private ChildEventListener childEventListener = new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot snapshot, String previousChildName) {
+            ContentModel contentModel = snapshot.getValue(ContentModel.class);
+
+            if(contentModel == null) return;
+
+            UtilsLog.d("smg childEventListener, title : " + contentModel.getTitle());
+            adapterContents.addItem(contentModel);
+            adapterSeries.addItem(contentModel);
+            //contentModels.add(contentModel);
+            adapterContents.notifyDataSetChanged();
+            adapterSeries.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot snapshot, String previousChildName) {
+
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot snapshot) {
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot snapshot, String previousChildName) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError error) {
+
+        }
+    };
 
     private void getStoragePhotoData() {
         StorageReference photoRef = storage.getReference().child("sungwoo/photo");
@@ -142,6 +202,8 @@ public class HomeFragment extends Fragment {
                     });
                 }
 
+                getStoragePdfData();
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -161,8 +223,7 @@ public class HomeFragment extends Fragment {
                     item.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            adapterContents.addItem(new DataModel(R.drawable.thor, uri.toString()));
-                            adapterContents.notifyDataSetChanged();
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -170,6 +231,7 @@ public class HomeFragment extends Fragment {
 
                         }
                     });
+
                 }
 
             }
@@ -179,5 +241,10 @@ public class HomeFragment extends Fragment {
 
             }
         });
+    }
+
+    private void uploadContent(String title, String imageUrl, String pdfUrl) {
+        ContentModel contentModel = new ContentModel(title, imageUrl, pdfUrl);
+        contentDB.push().setValue(contentModel);
     }
 }

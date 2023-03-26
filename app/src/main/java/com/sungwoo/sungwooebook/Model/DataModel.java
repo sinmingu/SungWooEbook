@@ -1,19 +1,19 @@
 package com.sungwoo.sungwooebook.Model;
 
 public class DataModel {
-    int image;
+    String image;
     String title;
 
-    public DataModel(int image, String title){
+    public DataModel(String image, String title){
         this.image = image;
         this.title = title;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

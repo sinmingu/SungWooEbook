@@ -10,12 +10,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 public class ContentActivity extends AppCompatActivity {
 
     private Button mPreviewBtn;
     private ImageView mPreviewImage;
-    private String pdfUri;
-    private int imageUri;
+    private String imageUri, pdfUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class ContentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_content);
 
         Intent intent = getIntent();
-        imageUri = intent.getIntExtra("image", R.drawable.hulk);
+        imageUri = intent.getStringExtra("imageUri");
         pdfUri = intent.getStringExtra("pdfUri");
 
         initPreviewWidget();
@@ -46,7 +47,7 @@ public class ContentActivity extends AppCompatActivity {
         });
 
         mPreviewImage = (ImageView) findViewById(R.id.preview_image);
-        mPreviewImage.setImageResource(imageUri);
+        Glide.with(mPreviewImage).load(imageUri).into(mPreviewImage);
 
     }
 }

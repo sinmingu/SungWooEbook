@@ -28,15 +28,16 @@ public class BottomAcitivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UtilsLog.d("BottomAcitivity onCreate");
         mContext = this;
         setContentView(R.layout.activity_bottom);
 
-        final HomeFragment mHomeFragment = new HomeFragment(mContext);
+        mHomeFragment = new HomeFragment(mContext);
+        mMyPageFragment = new MyPageFragment();
         /*Fragment mSearchFragment = new Fragment();
         Fragment mFavoriteFragment = new Fragment();
         Fragment mMyPageFragment = new Fragment();
         Fragment mEventFragment = new Fragment();*/
+
 
         getSupportFragmentManager().beginTransaction().replace(R.id.bottom_container, mHomeFragment).commit();
 
@@ -45,7 +46,7 @@ public class BottomAcitivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.tab1:
+                    case R.id.home:
                         getSupportFragmentManager().beginTransaction().replace(R.id.bottom_container, mHomeFragment).commit();
                         return true;
                     /*case R.id.tab2:
@@ -54,6 +55,9 @@ public class BottomAcitivity extends AppCompatActivity {
                     case R.id.tab3:
                         getSupportFragmentManager().beginTransaction().replace(R.id.bottom_container, fragment3).commit();
                         return true;*/
+                    case R.id.mypage:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.bottom_container, mMyPageFragment).commit();
+                        return true;
                 }
                 return false;
             }

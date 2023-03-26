@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sungwoo.sungwooebook.Fragment.ViewHolderSeries;
+import com.sungwoo.sungwooebook.Model.ContentModel;
 import com.sungwoo.sungwooebook.Model.DataModel;
 import com.sungwoo.sungwooebook.R;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 public class RecycleAdapterSeries extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // adapter에 들어갈 list 입니다.
-    private ArrayList<DataModel> listData = new ArrayList<>();
+    private ArrayList<ContentModel> listData = new ArrayList<>();
 
     @NonNull
     @Override
@@ -35,7 +36,7 @@ public class RecycleAdapterSeries extends RecyclerView.Adapter<RecyclerView.View
         return listData.size();
     }
 
-    public void addItem(DataModel data) {
+    public void addItem(ContentModel data) {
         // 외부에서 item을 추가시킬 함수입니다.
         listData.add(data);
     }
