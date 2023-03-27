@@ -67,8 +67,6 @@ public class MyPageFragment extends Fragment {
                         mMypageName.setText(userModel.getName());
                     }
                 }
-
-
             }
 
             @Override
