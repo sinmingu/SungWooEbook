@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,10 +43,12 @@ public class HomeFragment extends Fragment {
     RecycleAdapterSeries adapterSeries;
     RecycleAdapterContents adapterContents;
 
-    private int index = 0;
-    private ArrayList<DataModel> dataModels = new ArrayList<DataModel>();
     private DatabaseReference contentDB;
     private FirebaseStorage storage;
+
+    private RecyclerView recyclerViewSeries;
+    private RecyclerView recyclerViewContents;
+    private ProgressBar mContentProgressBar;
 
     public HomeFragment(Context context){
         mContext = context;
@@ -62,13 +65,13 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
+    }
 
-        /*
-        23.03.25 smg :: 기존 Data불러오는 메소드에 대한 미사용처리
-        getData();
-        getStoragePhotoData();
-        getStoragePdfData();
-        */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        loadingPdfFile();
     }
 
     @Override
@@ -79,8 +82,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void init(){
-        RecyclerView recyclerViewSeries = mMyView.findViewById(R.id.recyclerViewSeries);
-        RecyclerView recyclerViewContents = mMyView.findViewById(R.id.recyclerViewContent);
+        recyclerViewSeries = mMyView.findViewById(R.id.recyclerViewSeries);
+        recyclerViewContents = mMyView.findViewById(R.id.recyclerViewContent);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -99,51 +102,7 @@ public class HomeFragment extends Fragment {
         contentDB.addChildEventListener(childEventListener);
         storage = FirebaseStorage.getInstance();
 
-        //uploadContent("", "", "");
-    }
-
-    private void getData(){
-        //23-03-22 테스트용으로 adapterContents는 임시 주석
-        /*
-        DataModel data = new DataModel(R.drawable.iron_man, "아이언맨");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-        data = new DataModel(R.drawable.spider_man, "스파이더맨");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-        data = new DataModel(R.drawable.black_panther, "블랙팬서");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-        data = new DataModel(R.drawable.doctor, "닥터스트레인지");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-        data = new DataModel(R.drawable.hulk, "헐크");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-        data = new DataModel(R.drawable.thor, "토르");
-        adapterSeries.addItem(data);
-        //adapterContents.addItem(data);
-
-        DataModel data2 = new DataModel(R.drawable.iron_man, "아이언맨");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-        data2 = new DataModel(R.drawable.spider_man, "스파이더맨");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-        data2 = new DataModel(R.drawable.black_panther, "블랙팬서");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-        data2 = new DataModel(R.drawable.doctor, "닥터스트레인지");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-        data2 = new DataModel(R.drawable.hulk, "헐크");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-        data2 = new DataModel(R.drawable.thor, "토르");
-        adapterSeries.addItem(data2);
-        //adapterContents.addItem(data2);
-
-        */
+        mContentProgressBar = (ProgressBar) mMyView.findViewById(R.id.content_progressBar);
     }
 
     private ChildEventListener childEventListener = new ChildEventListener() {
@@ -153,12 +112,12 @@ public class HomeFragment extends Fragment {
 
             if(contentModel == null) return;
 
-            UtilsLog.d("smg childEventListener, title : " + contentModel.getTitle());
+            UtilsLog.d("childEventListener, title : " + contentModel.getTitle());
             adapterContents.addItem(contentModel);
             adapterSeries.addItem(contentModel);
-            //contentModels.add(contentModel);
             adapterContents.notifyDataSetChanged();
             adapterSeries.notifyDataSetChanged();
+            loadingEndPdfFile();
         }
 
         @Override
@@ -201,9 +160,7 @@ public class HomeFragment extends Fragment {
                         }
                     });
                 }
-
                 getStoragePdfData();
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -231,9 +188,7 @@ public class HomeFragment extends Fragment {
 
                         }
                     });
-
                 }
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -246,5 +201,25 @@ public class HomeFragment extends Fragment {
     private void uploadContent(String title, String imageUrl, String pdfUrl) {
         ContentModel contentModel = new ContentModel(title, imageUrl, pdfUrl);
         contentDB.push().setValue(contentModel);
+    }
+
+    private void loadingPdfFile() {
+        if(mContentProgressBar != null) {
+            mContentProgressBar.setVisibility(View.VISIBLE);
+        }
+
+        if(recyclerViewContents != null) {
+            recyclerViewContents.setVisibility(View.GONE);
+        }
+    }
+
+    private void loadingEndPdfFile() {
+        if(mContentProgressBar != null) {
+            mContentProgressBar.setVisibility(View.GONE);
+        }
+
+        if(recyclerViewContents != null) {
+            recyclerViewContents.setVisibility(View.VISIBLE);
+        }
     }
 }
