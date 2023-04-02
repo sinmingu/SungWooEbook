@@ -32,7 +32,7 @@ public class BottomAcitivity extends AppCompatActivity {
         setContentView(R.layout.activity_bottom);
 
         mHomeFragment = new HomeFragment(mContext);
-        mMyPageFragment = new MyPageFragment();
+        mMyPageFragment = new MyPageFragment(mContext);
         /*Fragment mSearchFragment = new Fragment();
         Fragment mFavoriteFragment = new Fragment();
         Fragment mMyPageFragment = new Fragment();
