@@ -21,6 +21,12 @@
         <activity android:name="com.sungwoo.sungwooebook.BottomAcitivity"
             android:exported="true">
         </activity>
+        <activity android:name="com.sungwoo.sungwooebook.ContentActivity"
+            android:exported="true">
+        </activity>
+        <activity android:name="com.sungwoo.sungwooebook.Login.MemberShipAcitivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>
