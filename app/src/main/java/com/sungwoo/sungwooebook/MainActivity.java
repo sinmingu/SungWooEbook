@@ -33,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(!editInputCheck()) {
+                    Toast.makeText(getApplicationContext(), "정보를 입력하세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 auto.signInWithEmailAndPassword(mUserId.getText().toString(), mPassWord.getText().toString())
                         .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -66,5 +71,13 @@ public class MainActivity extends AppCompatActivity {
         find_id_pw = (TextView) findViewById(R.id.find_id_pw);
 
         auto = FirebaseAuth.getInstance();
+    }
+
+    private boolean editInputCheck() {
+        if(mUserId.getText().toString().equals("") || mPassWord.getText().toString().equals("")) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
